@@ -12,6 +12,7 @@
   "credit_amount",
   "voucher_type",
   "voucher_no",
+  "remarks",
   "party",
   "balance",
   "is_cancelled"
@@ -81,12 +82,17 @@
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
    "label": "Is Cancelled"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2020-12-29 15:53:39.714645",
+ "modified": "2020-12-30 14:57:50.644314",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "GL Entry",

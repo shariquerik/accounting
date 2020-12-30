@@ -12,7 +12,7 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Accounting",
- "modified": "2020-12-30 12:16:57.702133",
+ "modified": "2020-12-30 13:08:51.778103",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Accounting",
@@ -28,8 +28,38 @@
   },
   {
    "doc_view": "List",
+   "label": "Accounts",
+   "link_to": "Account",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
    "label": "Items",
    "link_to": "Item",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Party",
+   "link_to": "Party",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Journal Entry",
+   "link_to": "Journal Entry",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": " Purchase Invoice",
+   "link_to": "Purchase Invoice",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Sales Invoice",
+   "link_to": "Sales Invoice",
    "type": "DocType"
   }
  ],
