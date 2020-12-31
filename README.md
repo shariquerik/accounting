@@ -1,6 +1,6 @@
 ## Accounting
 
-An Accounting App for Onboarding Test
+An Accounting App
 
 #### License
 
