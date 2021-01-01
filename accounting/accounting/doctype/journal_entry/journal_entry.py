@@ -37,7 +37,6 @@ class JournalEntry(Document):
 									"voucher_type": voucher_type, "voucher_no": voucher_no}, fields=["*"])
 		if gl_entries:
 			self.cancel_gl_entry(gl_entries[0].voucher_type, gl_entries[0].voucher_no)
-			self.adjust_account_balance()
 
 			for entry in gl_entries:
 				debit = entry.debit_amount
@@ -68,35 +67,20 @@ class JournalEntry(Document):
 				voucher_type=%s and voucher_no=%s and is_cancelled=0""",
 			(voucher_type, voucher_no))
 
-	def adjust_account_balance(self):
-		for d in self.accounting_entries:
-			account = frappe.get_doc('Account', d.account)
-			if aaccount.account_type == 'Asset' or aaccount.account_type == 'Expense':
-				if d.debit > 0:
-					aaccount.account_balance -= d.debit
-				elif d.credit > 0:
-					aaccount.account_balance += d.credit
-			elif aaccount.account_type == 'Liability' or aaccount.account_type == 'Income':
-				if d.debit > 0:
-					aaccount.account_balance += d.debit
-				elif d.credit > 0:
-					aaccount.account_balance -= d.credit
-			aaccount.save()
-
 	def balance_update(self):
 		for d in self.accounting_entries:
 			account = frappe.get_doc('Account', d.account)
-			if aaccount.account_type == 'Asset' or aaccount.account_type == 'Expense':
+			if account.root_type == 'Asset' or account.root_type == 'Expense':
 				if d.debit > 0:
-					aaccount.account_balance += d.debit
+					account.account_balance += d.debit
 				elif d.credit > 0:
-					aaccount.account_balance -= d.credit
-			elif aaccount.account_type == 'Liability' or aaccount.account_type == 'Income':
+					account.account_balance -= d.credit
+			elif account.root_type == 'Liability' or account.root_type == 'Income' or account.root_type == 'Equity':
 				if d.debit > 0:
-					aaccount.account_balance -= d.debit
+					account.account_balance -= d.debit
 				elif d.credit > 0:
-					aaccount.account_balance += d.credit
-			aaccount.save()
+					account.account_balance += d.credit
+			account.save()
 
 	def make_gl_entry(self):
 		for d in self.accounting_entries:
@@ -109,5 +93,6 @@ class JournalEntry(Document):
 				'voucher_type': self.doctype,
 				'voucher_no': self.name,
 				'party': d.party,
+				'company': self.company,
 				'balance': frappe.db.get_value('Account', d.account, 'account_balance')
 			}).insert()

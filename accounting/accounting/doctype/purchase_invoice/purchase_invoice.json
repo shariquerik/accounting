@@ -8,6 +8,7 @@
  "field_order": [
   "naming_series",
   "party",
+  "company",
   "posting_date",
   "items",
   "total_quantity",
@@ -89,12 +90,18 @@
    "label": "Items",
    "options": "Purchase Invoice Item",
    "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-12-31 15:31:21.250602",
+ "modified": "2021-01-01 22:33:03.746703",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Purchase Invoice",

@@ -8,6 +8,7 @@
  "field_order": [
   "naming_series",
   "party",
+  "company",
   "posting_date",
   "accounting_entries",
   "total_debit",
@@ -44,8 +45,7 @@
    "label": "Total Debit",
    "no_copy": 1,
    "options": "Currency:INR",
-   "print_hide": 1,
-   "read_only": 1
+   "print_hide": 1
   },
   {
    "fieldname": "total_credit",
@@ -54,8 +54,7 @@
    "label": "Total Credit",
    "no_copy": 1,
    "options": "Currency:INR",
-   "print_hide": 1,
-   "read_only": 1
+   "print_hide": 1
   },
   {
    "fieldname": "difference",
@@ -79,12 +78,18 @@
    "options": "Journal Entry",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-12-29 16:18:32.359347",
+ "modified": "2021-01-01 22:38:15.150243",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Journal Entry",

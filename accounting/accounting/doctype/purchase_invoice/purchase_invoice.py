@@ -21,8 +21,6 @@ class PurchaseInvoice(Document):
 		gl_entries = frappe.get_all('GL Entry', filters={"voucher_type": voucher_type, "voucher_no": voucher_no}, fields=["*"])
 		if gl_entries:
 			self.cancel_gl_entry(gl_entries[0].voucher_type, gl_entries[0].voucher_no)
-			self.balance_update(self.expense_account, "credit")
-			self.balance_update(self.credit_to, "debit")
 
 			for entry in gl_entries:
 				debit = entry.debit_amount
@@ -70,6 +68,7 @@ class PurchaseInvoice(Document):
 			'voucher_type': self.doctype,
 			'voucher_no': self.name,
 			'party': self.party,
+			'company': self.company,
 			'balance': frappe.db.get_value('Account', account, 'account_balance')
 		}).insert()
 

@@ -8,6 +8,7 @@
  "field_order": [
   "naming_series",
   "party",
+  "company",
   "posting_date",
   "items",
   "total_quantity",
@@ -98,12 +99,18 @@
    "label": "Items",
    "options": "Sales Invoice Item",
    "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-12-31 15:31:32.997527",
+ "modified": "2021-01-01 22:33:40.181173",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Sales Invoice",

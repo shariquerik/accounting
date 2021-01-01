@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020, Shariq and contributors
+# Copyright (c) 2021, Shariq and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 
-class SalesInvoice(Document):
+class DeliveryNote(Document):
 
 	def on_submit(self):
 		self.balance_update(self.income_account, "credit")
@@ -73,15 +73,14 @@ class SalesInvoice(Document):
 		}).insert()
 
 @frappe.whitelist()
-def make_payment_entry(source_name, target_doc=None):
+def make_sales_invoice(source_name, target_doc=None):
 	from frappe.model.mapper import get_mapped_doc
 
-	doclist = get_mapped_doc("Sales Invoice", source_name , {
-		"Sales Invoice": {
-			"doctype": "Payment Entry",
+	doclist = get_mapped_doc("Delivery Note", source_name , {
+		"Delivery Note": {
+			"doctype": "Sales Invoice",
 			"field_map": {
-				"total_amount": "paid_amount",
-				"debit_to": "paid_from"
+				"total_amount": "total_amount"
 			},
 			"validation": {
 				"docstatus": ["=", 1]

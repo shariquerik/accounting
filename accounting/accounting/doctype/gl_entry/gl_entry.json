@@ -8,6 +8,7 @@
  "field_order": [
   "posting_date",
   "account",
+  "company",
   "debit_amount",
   "credit_amount",
   "voucher_type",
@@ -87,12 +88,18 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2020-12-30 14:57:50.644314",
+ "modified": "2021-01-01 22:37:07.029905",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "GL Entry",

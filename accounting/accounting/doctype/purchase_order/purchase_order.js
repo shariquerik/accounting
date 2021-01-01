@@ -1,11 +1,11 @@
-// Copyright (c) 2020, Shariq and contributors
+// Copyright (c) 2021, Shariq and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Purchase Invoice', {
+frappe.ui.form.on('Purchase Order', {
 	refresh: function(frm) {
-		frm.add_custom_button(__("Payment Entry"), function () {
+		frm.add_custom_button(__("Purchase Receipt"), function () {
 			frappe.model.open_mapped_doc({
-				method: "accounting.accounting.doctype.purchase_invoice.purchase_invoice.make_payment_entry",
+				method: "accounting.accounting.doctype.purchase_order.purchase_order.make_purchase_receipt",
 				frm: cur_frm
 			})
 		}, __("Create"));
@@ -13,7 +13,7 @@ frappe.ui.form.on('Purchase Invoice', {
 	}
 });
 
-frappe.ui.form.on("Purchase Invoice Item", {
+frappe.ui.form.on("Purchase Order Item", {
 	qty: function(frm,cdt,cdn){
 		calculate_total(frm, cdt, cdn);
 	},
@@ -27,7 +27,7 @@ var calculate_total = function(frm, cdt, cdn) {
 }
 
 
-frappe.ui.form.on("Purchase Invoice Item", "qty", function(frm, cdt, cdn) {
+frappe.ui.form.on("Purchase Order Item", "qty", function(frm, cdt, cdn) {
 	var purchase_item_details = frm.doc.items;
 	var total = 0
 	for(var i in purchase_item_details) {
@@ -36,7 +36,7 @@ frappe.ui.form.on("Purchase Invoice Item", "qty", function(frm, cdt, cdn) {
 	frm.set_value("total_quantity", total)
 });
 
-frappe.ui.form.on("Purchase Invoice Item", "amount", function(frm, cdt, cdn) {
+frappe.ui.form.on("Purchase Order Item", "amount", function(frm, cdt, cdn) {
 	var purchase_item_details = frm.doc.items;
 	var total = 0
 	for(var i in purchase_item_details) {

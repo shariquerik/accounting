@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020, Shariq and contributors
+# Copyright (c) 2021, Shariq and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 
-class SalesInvoice(Document):
+class PurchaseReceipt(Document):
 
 	def on_submit(self):
-		self.balance_update(self.income_account, "credit")
-		self.balance_update(self.debit_to, "debit")
-		self.make_gl_entry(self.income_account, 0, self.total_amount)
-		self.make_gl_entry(self.debit_to, self.total_amount, 0)
+		self.balance_update(self.expense_account, "debit")
+		self.balance_update(self.credit_to, "credit")
+		self.make_gl_entry(self.expense_account, self.total_amount, 0)
+		self.make_gl_entry(self.credit_to, 0, self.total_amount)
 
 	def on_cancel(self):
 		self.make_reverse_gl_entry(voucher_type=self.doctype, voucher_no=self.name)
@@ -42,19 +42,19 @@ class SalesInvoice(Document):
 		gl_entry.submit()
 
 	def cancel_gl_entry(self, voucher_type, voucher_no):
-		frappe.db.sql("""UPDATE
-				`tabGL Entry`
-			SET
+		frappe.db.sql("""UPDATE 
+				`tabGL Entry` 
+			SET 
 				is_cancelled=1 
-			WHERE
+			WHERE 
 				voucher_type=%s and voucher_no=%s and is_cancelled=0""",
 			(voucher_type, voucher_no))
 
-	def balance_update(self, account, type):
+	def balance_update(self, account, account_type):
 		account = frappe.get_doc('Account', account)
-		if type == "debit":
+		if account_type == "debit":
 			account.account_balance += self.total_amount
-		elif type == "credit":
+		elif account_type == "credit":
 			account.account_balance -= self.total_amount
 		account.save()
 
@@ -73,15 +73,14 @@ class SalesInvoice(Document):
 		}).insert()
 
 @frappe.whitelist()
-def make_payment_entry(source_name, target_doc=None):
+def make_purchase_invoice(source_name, target_doc=None):
 	from frappe.model.mapper import get_mapped_doc
 
-	doclist = get_mapped_doc("Sales Invoice", source_name , {
-		"Sales Invoice": {
-			"doctype": "Payment Entry",
+	doclist = get_mapped_doc("Purchase Receipt", source_name , {
+		"Purchase Receipt": {
+			"doctype": "Purchase Invoice",
 			"field_map": {
-				"total_amount": "paid_amount",
-				"debit_to": "paid_from"
+				"total_amount": "total_amount"
 			},
 			"validation": {
 				"docstatus": ["=", 1]

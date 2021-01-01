@@ -12,13 +12,13 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Accounting",
- "modified": "2020-12-31 18:11:46.380310",
+ "modified": "2021-01-01 22:29:42.805853",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Accounting",
  "owner": "Administrator",
  "pin_to_bottom": 0,
- "pin_to_top": 1,
+ "pin_to_top": 0,
  "shortcuts": [
   {
    "doc_view": "Tree",
@@ -30,6 +30,12 @@
    "doc_view": "List",
    "label": "Accounts",
    "link_to": "Account",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "Company",
+   "link_to": "Company",
    "type": "DocType"
   },
   {
@@ -52,20 +58,14 @@
   },
   {
    "doc_view": "List",
-   "label": " Purchase Invoice",
-   "link_to": "Purchase Invoice",
+   "label": "Purchase",
+   "link_to": "Purchase Order",
    "type": "DocType"
   },
   {
    "doc_view": "List",
-   "label": "Sales Invoice",
-   "link_to": "Sales Invoice",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "List",
-   "label": "Company",
-   "link_to": "Company",
+   "label": "Sales",
+   "link_to": "Sales Order",
    "type": "DocType"
   }
  ],
