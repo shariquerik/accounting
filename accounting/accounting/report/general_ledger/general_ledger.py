@@ -18,62 +18,62 @@ def execute(filters=None):
 
 def validate_filters(filters):
 	if filters.from_date > filters.to_date:
-		frappe.throw(_("From Date Should be less than To Date"))
+		frappe.throw("From Date Should be less than To Date")
 
 def get_columns():
 	columns = [
 		{
-			"label": _("GL Entry"),
+			"label": "GL Entry",
 			"fieldname": "gl_entry",
 			"fieldtype": "Link",
 			"options": "GL Entry",
 			"hidden": 1
 		},
 		{
-			"label": _("Posting Date"),
+			"label": "Posting Date",
 			"fieldname": "posting_date",
 			"fieldtype": "Date",
 			"width": 90
 		},
 		{
-			"label": _("Account"),
+			"label": "Account",
 			"fieldname": "account",
 			"fieldtype": "Link",
 			"options": "Account",
 			"width": 180
 		},
 		{
-			"label": _("Debit (INR)"),
+			"label": "Debit (INR)",
 			"fieldname": "debit_amount",
 			"fieldtype": "Float",
 			"width": 100
 		},
 		{
-			"label": _("Credit (INR)"),
+			"label": "Credit (INR)",
 			"fieldname": "credit_amount",
 			"fieldtype": "Float",
 			"width": 100
 		},
 		{
-			"label": _("Balance (INR)"),
+			"label": "Balance (INR)",
 			"fieldname": "balance",
 			"fieldtype": "Float",
 			"width": 130
 		},
 		{
-			"label": _("Voucher Type"),
+			"label": "Voucher Type",
 			"fieldname": "voucher_type",
 			"width": 120
 		},
 		{
-			"label": _("Voucher No"),
+			"label": "Voucher No",
 			"fieldname": "voucher_no",
 			"fieldtype": "Dynamic Link",
 			"options": "voucher_type",
 			"width": 180
 		},
 		{
-			"label": _("Party"),
+			"label": "Party",
 			"fieldname": "party",
 			"width": 100
 		}

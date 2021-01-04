@@ -2,11 +2,26 @@
  "cards": [
   {
    "hidden": 0,
+   "label": "Buy",
+   "links": "[\n    {\n        \"label\": \"Supplier\",\n        \"name\": \"Party\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Purchase Order\",\n        \"name\": \"Purchase Order\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Purchase Receipt\",\n        \"name\": \"Purchase Receipt\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Purchase Invoice\",\n        \"name\": \"Purchase Invoice\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Payment Entry\",\n        \"name\": \"Payment Entry\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    }\n]"
+  },
+  {
+   "hidden": 0,
+   "label": "Sell",
+   "links": "[\n    {\n        \"label\": \"Customer\",\n        \"name\": \"Party\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Sales Order\",\n        \"name\": \"Sales Order\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Delivery Note\",\n        \"name\": \"Delivery Note\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Sales Invoice\",\n        \"name\": \"Sales Invoice\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Payment Entry\",\n        \"name\": \"Payment Entry\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    }\n]"
+  },
+  {
+   "hidden": 0,
+   "label": "General Ledger",
+   "links": "[\n    {\n        \"label\": \"Journal Entry\",\n        \"name\": \"Journal Entry\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"General Ledger\",\n        \"name\": \"GL Entry\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    }\n]"
+  },
+  {
+   "hidden": 0,
    "label": "Reports",
-   "links": "[\n    {\n        \"dependencies\": [\n            \"GL Entry\"\n        ],\n        \"doctype\": \"GL Entry\",\n        \"is_query_report\": true,\n        \"label\": \"General Ledger\",\n        \"name\": \"General Ledger\",\n        \"type\": \"report\"\n    }\n]"
+   "links": "[\n    {\n        \"dependencies\": [\n            \"GL Entry\"\n        ],\n        \"doctype\": \"GL Entry\",\n        \"is_query_report\": true,\n        \"label\": \"General Ledger\",\n        \"name\": \"General Ledger\",\n        \"type\": \"report\"\n    },\n    {\n        \"dependencies\": [\n            \"GL Entry\"\n        ],\n        \"doctype\": \"GL Entry\",\n        \"is_query_report\": true,\n        \"label\": \"Balance Sheet\",\n        \"name\": \"Balance Sheet\",\n        \"type\": \"report\"\n    },\n    {\n        \"dependencies\": [\n            \"GL Entry\"\n        ],\n        \"doctype\": \"GL Entry\",\n        \"is_query_report\": true,\n        \"label\": \"Profit and Loss Statement\",\n        \"name\": \"Profit and Loss Statement\",\n        \"type\": \"report\"\n    }\n]"
   }
  ],
- "cards_label": "Reports",
+ "cards_label": "REPORTS & MASTERS",
  "category": "Modules",
  "charts": [],
  "creation": "2020-12-30 12:03:17.903383",
@@ -19,7 +34,7 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Accounting",
- "modified": "2021-01-02 21:38:15.638657",
+ "modified": "2021-01-04 20:21:35.056496",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Accounting",
@@ -76,5 +91,5 @@
    "type": "DocType"
   }
  ],
- "shortcuts_label": "QUICK LINK"
+ "shortcuts_label": "YOUR SHORTCUTS"
 }
