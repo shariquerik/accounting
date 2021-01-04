@@ -104,13 +104,14 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-01 22:33:40.181173",
+ "modified": "2021-01-02 19:31:30.144051",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Sales Invoice",

@@ -84,13 +84,14 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-01 22:32:17.818681",
+ "modified": "2021-01-02 19:31:54.666712",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Payment Entry",

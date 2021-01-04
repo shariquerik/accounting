@@ -1,5 +1,12 @@
 {
- "cards": [],
+ "cards": [
+  {
+   "hidden": 0,
+   "label": "Reports",
+   "links": "[\n    {\n        \"dependencies\": [\n            \"GL Entry\"\n        ],\n        \"doctype\": \"GL Entry\",\n        \"is_query_report\": true,\n        \"label\": \"General Ledger\",\n        \"name\": \"General Ledger\",\n        \"type\": \"report\"\n    }\n]"
+  }
+ ],
+ "cards_label": "Reports",
  "category": "Modules",
  "charts": [],
  "creation": "2020-12-30 12:03:17.903383",
@@ -12,7 +19,7 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Accounting",
- "modified": "2021-01-01 22:29:42.805853",
+ "modified": "2021-01-02 21:38:15.638657",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Accounting",

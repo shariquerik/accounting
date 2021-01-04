@@ -86,13 +86,14 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-01 22:35:09.840721",
+ "modified": "2021-01-02 19:30:47.871934",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Sales Order",
