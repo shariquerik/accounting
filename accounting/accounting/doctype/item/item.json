@@ -1,7 +1,8 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:item_name",
+ "autoname": "field:item_code",
  "creation": "2020-12-29 15:14:19.006164",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -9,33 +10,32 @@
  "field_order": [
   "item_code",
   "item_name",
-  "unit_of_measurement",
   "standard_selling_rate",
-  "item_description"
+  "column_break_3",
+  "item_group",
+  "description_section",
+  "brand",
+  "item_description",
+  "image"
  ],
  "fields": [
   {
+   "bold": 1,
    "fieldname": "item_name",
    "fieldtype": "Data",
+   "in_global_search": 1,
    "label": "Item Name",
    "unique": 1
   },
   {
+   "bold": 1,
    "fieldname": "item_code",
    "fieldtype": "Data",
+   "in_global_search": 1,
    "in_list_view": 1,
    "label": "Item Code",
    "reqd": 1,
    "unique": 1
-  },
-  {
-   "default": "Nos",
-   "fieldname": "unit_of_measurement",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Unit Of measurement",
-   "options": "KG\nKM\nLitre\nNos",
-   "reqd": 1
   },
   {
    "fieldname": "standard_selling_rate",
@@ -47,11 +47,42 @@
    "fieldname": "item_description",
    "fieldtype": "Text Editor",
    "label": "Item Description"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "description_section",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "default": "Products",
+   "fieldname": "item_group",
+   "fieldtype": "Select",
+   "label": "Item Group",
+   "options": "Products\nServices"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "image"
   }
  ],
+ "icon": "fa fa-tag",
+ "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2020-12-29 15:25:09.660960",
+ "max_attachments": 1,
+ "modified": "2021-01-05 14:19:52.273773",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Item",
@@ -71,7 +102,11 @@
   }
  ],
  "quick_entry": 1,
+ "search_fields": "item_name, item_group",
+ "show_name_in_global_search": 1,
+ "show_preview_popup": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "item_name",
  "track_changes": 1
 }

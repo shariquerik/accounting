@@ -20,20 +20,17 @@ def create_charts(company, abbr):
 						}
 					},
 					_("Bank Accounts"): {
-						"account_type": "Bank",
 						"is_group": 1
 					},
 					_("Cash In Hand"): {
 						_("Cash"): {
 							"account_type": "Cash"
-						},
-						"account_type": "Cash"
+						}
 					},
 					_("Stock Assets"): {
 						_("Stock In Hand"): {
 							"account_type": "Stock"
-						},
-						"account_type": "Stock",
+						}
 					}
 				},
 				"root_type": "Asset"
@@ -50,7 +47,9 @@ def create_charts(company, abbr):
 			},
 			_("Income"): {
 				_("Direct Income"): {
-					_("Sales"): {}
+					_("Sales"): {
+						"account_type": "Income Account"
+					}
 				},
 				_("Indirect Income"): {
 					"is_group": 1
@@ -97,6 +96,7 @@ def create_charts(company, abbr):
 					account = frappe.get_doc({
 						"doctype": "Account",
 						"account_name": account_name_with_abbr,
+						"account_type": child.get("account_type"),
 						"company": company,
 						"parent_account": parent,
 						"is_group": is_group,

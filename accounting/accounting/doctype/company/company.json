@@ -9,19 +9,23 @@
  "field_order": [
   "company_name",
   "abbr",
-  "default_currency",
   "is_group",
+  "parent_company",
+  "default_values_section",
+  "default_currency",
+  "account_settings_section",
   "default_bank_account",
-  "default_cash_account",
-  "default_receivable_account",
   "default_payable_account",
   "default_cost_of_goods_sold_account",
-  "default_income_account",
   "default_inventory_account",
+  "section_break_10",
+  "default_cash_account",
+  "default_receivable_account",
+  "default_income_account",
+  "stock_received_but_not_billed",
   "lft",
   "rgt",
-  "old_parent",
-  "parent_company"
+  "old_parent"
  ],
  "fields": [
   {
@@ -66,12 +70,16 @@
   {
    "fieldname": "old_parent",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Old Parent",
-   "options": "Company"
+   "options": "Company",
+   "read_only": 1
   },
   {
    "fieldname": "parent_company",
    "fieldtype": "Link",
+   "hidden": 1,
+   "in_list_view": 1,
    "label": "Parent Company",
    "options": "Company"
   },
@@ -123,12 +131,34 @@
    "in_list_view": 1,
    "label": "Abbr",
    "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "default_values_section",
+   "fieldtype": "Section Break",
+   "label": "Default Values"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "account_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Account Settings"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stock_received_but_not_billed",
+   "fieldtype": "Link",
+   "label": "Stock Received But Not Billed",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2020-12-31 16:19:39.931635",
+ "modified": "2021-01-05 23:31:52.291486",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Company",

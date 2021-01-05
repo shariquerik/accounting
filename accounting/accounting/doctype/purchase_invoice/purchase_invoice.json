@@ -8,13 +8,19 @@
  "field_order": [
   "naming_series",
   "party",
+  "column_break_3",
   "company",
   "posting_date",
+  "section_break_6",
   "items",
+  "totals_section",
   "total_quantity",
+  "column_break_10",
   "total_amount",
-  "credit_to",
+  "accounts_section",
   "expense_account",
+  "column_break_13",
+  "credit_to",
   "amended_from"
  ],
  "fields": [
@@ -35,6 +41,7 @@
    "label": "Supplier",
    "options": "Party",
    "print_hide": 1,
+   "reqd": 1,
    "search_index": 1
   },
   {
@@ -97,12 +104,38 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Accounts"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-02 19:31:41.183449",
+ "modified": "2021-01-05 19:20:18.974063",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Purchase Invoice",

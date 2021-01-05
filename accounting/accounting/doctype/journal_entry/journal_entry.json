@@ -1,5 +1,7 @@
 {
  "actions": [],
+ "allow_auto_repeat": 1,
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2020-12-29 16:18:32.359347",
  "doctype": "DocType",
@@ -8,9 +10,15 @@
  "field_order": [
   "naming_series",
   "party",
+  "column_break_3",
   "company",
   "posting_date",
+  "section_break_6",
   "accounting_entries",
+  "section_break_8",
+  "reference_number",
+  "reference_date",
+  "column_break_11",
   "total_debit",
   "total_credit",
   "difference",
@@ -85,12 +93,41 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reference_number",
+   "fieldtype": "Data",
+   "label": "Reference Number",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "reference_date",
+   "fieldtype": "Date",
+   "label": "Reference Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-02 19:30:14.055636",
+ "modified": "2021-01-05 18:04:10.852505",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Journal Entry",

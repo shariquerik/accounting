@@ -8,11 +8,15 @@
  "field_order": [
   "naming_series",
   "party",
+  "column_break_3",
   "company",
   "posting_date",
   "schedule_date",
+  "section_break_7",
   "items",
+  "section_totals",
   "total_quantity",
+  "column_break_11",
   "total_amount",
   "amended_from"
  ],
@@ -34,6 +38,7 @@
    "label": "Supplier",
    "options": "Party",
    "print_hide": 1,
+   "reqd": 1,
    "search_index": 1
   },
   {
@@ -50,6 +55,7 @@
    "allow_on_submit": 1,
    "fieldname": "schedule_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Required By"
   },
   {
@@ -88,12 +94,29 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_totals",
+   "fieldtype": "Section Break",
+   "label": "Totals"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-02 19:31:19.541343",
+ "modified": "2021-01-05 19:17:27.413054",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Purchase Order",

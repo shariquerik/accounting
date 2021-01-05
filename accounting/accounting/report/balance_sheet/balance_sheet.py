@@ -65,7 +65,7 @@ def get_account_list(filters, root_type, balance_label):
 	accounts = []
 	gl_entries = frappe.db.sql(
 		"""
-		select distinct(account), posting_date
+		select distinct(account)
 		from `tabGL Entry` 
 		where {conditions} and account in (select name from tabAccount where root_type=%s)
 		order by account

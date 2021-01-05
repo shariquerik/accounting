@@ -9,16 +9,16 @@
  "field_order": [
   "account_number",
   "account_name",
-  "root_type",
-  "account_type",
   "company",
+  "root_type",
+  "is_group",
+  "column_break_3",
+  "parent_account",
+  "account_type",
+  "currency",
   "lft",
   "rgt",
-  "is_group",
-  "old_parent",
-  "parent_account",
-  "currency",
-  "account_balance"
+  "old_parent"
  ],
  "fields": [
   {
@@ -42,7 +42,7 @@
    "fieldname": "account_type",
    "fieldtype": "Select",
    "label": "Account Type",
-   "options": "Receivable\nBank\nCash\nStock\nCost of Goods Sold\nPayable\nStock Received But Not Billed\nAsset Received But Not Billed\nEquity"
+   "options": "\nReceivable\nBank\nCash\nStock\nCost of Goods Sold\nIncome Account\nPayable\nStock Received But Not Billed\nAsset Received But Not Billed\nEquity"
   },
   {
    "default": "0",
@@ -88,14 +88,6 @@
    "options": "Currency"
   },
   {
-   "default": "0.00",
-   "fieldname": "account_balance",
-   "fieldtype": "Currency",
-   "label": "Account Balance",
-   "options": "Currency:INR",
-   "precision": "2"
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -108,12 +100,16 @@
    "in_standard_filter": 1,
    "label": "Root Type",
    "options": "Asset\nLiability\nIncome\nExpense\nEquity"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2021-01-01 17:42:51.256696",
+ "modified": "2021-01-05 16:52:34.209244",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Account",

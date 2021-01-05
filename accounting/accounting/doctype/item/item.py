@@ -7,4 +7,7 @@ from __future__ import unicode_literals
 from frappe.model.document import Document
 
 class Item(Document):
-	pass
+
+	def validate(self):
+		if not self.item_name:
+			self.item_name = self.item_code

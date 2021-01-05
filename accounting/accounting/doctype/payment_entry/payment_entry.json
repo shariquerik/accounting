@@ -7,13 +7,22 @@
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
-  "company",
   "payment_type",
+  "column_break_3",
   "posting_date",
-  "paid_from",
-  "paid_to",
+  "company",
+  "payment_from__to_section",
   "party",
+  "accounts_section",
+  "paid_from",
+  "column_break_8",
+  "paid_to",
+  "amount_section",
   "paid_amount",
+  "transaction_id_section",
+  "reference_no",
+  "column_break_16",
+  "reference_date",
   "amended_from"
  ],
  "fields": [
@@ -86,12 +95,60 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Accounts"
+  },
+  {
+   "fieldname": "payment_from__to_section",
+   "fieldtype": "Section Break",
+   "label": "Payment From / To"
+  },
+  {
+   "fieldname": "amount_section",
+   "fieldtype": "Section Break",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "transaction_id_section",
+   "fieldtype": "Section Break",
+   "label": "Transaction Id"
+  },
+  {
+   "bold": 1,
+   "fieldname": "reference_no",
+   "fieldtype": "Data",
+   "label": "Cheque/Reference No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "default": "Today",
+   "fieldname": "reference_date",
+   "fieldtype": "Date",
+   "label": "Cheque/Reference Date",
+   "reqd": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-02 19:31:54.666712",
+ "modified": "2021-01-05 17:50:26.493954",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Payment Entry",
