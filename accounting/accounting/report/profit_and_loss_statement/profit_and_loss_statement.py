@@ -11,12 +11,19 @@ def execute(filters=None):
 	balance_label = "{}".format(filters.fiscal_year.replace(" ", "_").replace("-", "_"))
 
 	columns = get_columns(filters)
-	data = get_data(filters, balance_label)
-	report_summary = get_report_summary(data, balance_label)
 
-	income_accounts = get_account_list(filters, 'Income', balance_label)
-	expense_accounts = get_account_list(filters, 'Expense', balance_label)
-	chart = get_chart_data(filters, columns, income_accounts, expense_accounts, data[-1][balance_label])
+	income = get_data(filters.company, 'Income', 'Credit',balance_label)
+	expense = get_data(filters.company, 'Expense', 'Debit',balance_label)
+
+	data = []
+	data.extend(income or [])
+	data.extend(expense or [])
+
+	profit_loss, income, expense = get_profit_loss_amount(data, balance_label)
+	data.append({ "account": 'Profit for the year', balance_label: profit_loss })
+
+	chart = get_chart_data(filters, columns, income, expense, data[-1][balance_label], balance_label)
+	report_summary = get_report_summary(data, balance_label)
 
 	return columns, data, None, chart, report_summary
 
@@ -39,76 +46,76 @@ def get_columns(filters):
 	]
 	return columns
 
-def get_data(filters, balance_label):
+def get_data(company, root_type, dr_cr,balance_label):
+	accounts = get_accounts(company, root_type)
 	data = []
-
-	income_accounts = get_account_list(filters, 'Income', balance_label)
-	expense_accounts = get_account_list(filters, 'Expense', balance_label)
-
-	if income_accounts:
-		append_accounts_and_total(data, income_accounts, 'Total Income (Credit)',balance_label)
-	if expense_accounts:
-		append_accounts_and_total(data, expense_accounts, 'Total Expense (Debit)', balance_label)
-
-	profit_loss, debit, credit = get_profit_loss_amount(data, balance_label)
-	data.append({ "account": 'Profit for the year', balance_label: profit_loss })
-
+	if accounts:
+		i = 0
+		for d in accounts:
+			if d.parent_account == None or d.parent_account == data[-1]['account']:
+				append(data, d, i, balance_label)
+				i+=1
+			else:
+				for a in data:
+					if a['account'] == d.parent_account:
+						i = a['indent'] + 1
+						break
+				append(data, d, i, balance_label)
+				i+=1
+	temp=[]
+	for d in data:
+		bal = get_account_balance(d['account'])
+		if bal:
+			d[balance_label] = abs(bal)
+			temp.append(d)
+	for t in temp:
+		for d in data:
+			if d["account"] == t["parent_account"]:
+				if d[balance_label] == 0:
+					d[balance_label] = t[balance_label]
+					temp.append(d)
+				else:
+					d[balance_label] += t[balance_label]
+	data = [d for d in data if d[balance_label] != 0]
+	if data:
+		data.append({
+			"account": "Total " + root_type + " (" + dr_cr + ")",
+			balance_label: data[0][balance_label]
+		})
+		data.append({})
 	return data
 
-def get_account_list(filters, root_type, balance_label):
-	accounts = []
-	gl_entries = frappe.db.sql(
-		"""
-		select distinct(account)
-		from `tabGL Entry` 
-		where {conditions} and account in (select name from tabAccount where root_type=%s)
-		order by account
-		""".format(conditions=get_conditions(filters)), root_type, as_dict=1)
+def append(data, d, i, balance_label):
+	data.append({
+		"account": d.name,
+		"account_type": d.account_type,
+		"parent_account": d.parent_account,
+		"indent": i,
+		"has_value": d.is_group,
+		balance_label: 0
+	})
 
-	for gl_entry in gl_entries:
-		balance = abs(get_account_balance(gl_entry.account))
-		if balance:
-			accounts.append({
-				"account": gl_entry.account,
-				"root_type": root_type,
-				balance_label: balance
-			})
-	return accounts
-
-def append_accounts_and_total(data, accounts, label, balance_label):
-	data += accounts
-	balance = 0
-	for account in accounts:
-		balance += account[balance_label]
-	data.append({ "account": label, balance_label: balance })
-	data.append({ "account": '' })
+def get_accounts(company, root_type):
+	return frappe.db.sql(""" select name, parent_account, lft, root_type, account_type, is_group
+			from 
+				tabAccount
+			where 
+				company=%s and root_type=%s 
+			order by 
+				lft""", (company, root_type), as_dict=1)
 
 def get_profit_loss_amount(data, balance_label):
-	debit, credit = 0,0
+	income, expense = 0,0
 	for d in data:
-		if d['account'] == 'Total Income (Credit)':
-			credit = d[balance_label]
-		elif d['account'] == 'Total Expense (Debit)':
-			debit = d[balance_label]
-	profit_loss = credit - debit
-	return profit_loss, debit, credit
-
-def get_conditions(filters):
-	conditions = []
-
-	if filters.get("company"):
-		conditions.append("company='{}'".format(filters.company))
-
-	year = frappe.db.sql("""select * from `tabFiscal Year` where year=%s""",filters.fiscal_year,as_dict=1)[0]
-
-	conditions.append("posting_date>='{}'".format(year.year_start_date))
-	conditions.append("posting_date<='{}'".format(year.year_end_date))
-	conditions.append("is_cancelled=0")
-
-	return "{}".format(" and ".join(conditions)) if conditions else ""
+		if d and d['account'] == 'Total Income (Credit)':
+			income = d[balance_label]
+		elif d and d['account'] == 'Total Expense (Debit)':
+			expense = d[balance_label]
+	profit_loss = income - expense
+	return profit_loss, income, expense
 
 def get_report_summary(data, balance_label):
-	profit, expense, income = get_profit_loss_amount(data, balance_label)
+	profit, income, expense = get_profit_loss_amount(data, balance_label)
 
 	report_summary = [
 		{
@@ -133,18 +140,17 @@ def get_report_summary(data, balance_label):
 	]
 	return report_summary
 
-def get_chart_data(filters, columns, income, expense, profit):
-	labels = [d.get("label") for d in columns[1:]]
+def get_chart_data(filters, columns, income, expense, profit, balance_label):
+	labels = [balance_label]
 
 	income_data, expense_data, profit_data = [], [], []
 
-	for p in columns[1:]:
-		if income:
-			income_data.append(income[0].get(p.get("fieldname")))
-		if expense:
-			expense_data.append(expense[0].get(p.get("fieldname")))
-		if profit:
-			profit_data.append(profit)
+	if income != 0:
+		income_data.append(income)
+	if expense != 0:
+		expense_data.append(expense)
+	if profit != 0:
+		profit_data.append(profit)
 	
 	datasets = []
 	if income_data:

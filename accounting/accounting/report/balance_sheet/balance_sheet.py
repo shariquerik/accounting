@@ -11,14 +11,22 @@ def execute(filters=None):
 	balance_label = "{}".format(filters.fiscal_year.replace(" ", "_").replace("-", "_"))
 
 	columns = get_columns(filters)
-	data = get_data(filters, balance_label)
+
+	asset = get_data(filters.company, 'Asset', 'Debit',balance_label)
+	liability = get_data(filters.company, 'Liability', 'Credit',balance_label)
+	equity = get_data(filters.company, 'Equity', 'Credit',balance_label)
+
+	data = []
+	data.extend(asset or [])
+	data.extend(liability or [])
+	data.extend(equity or [])
+
+	profit_loss, total, asset, liability, equity = get_profit_loss_total_amount(data, balance_label)
+	data.append({ "account": 'Provisional Profit/Loss (Credit)', balance_label: profit_loss })
+	data.append({ "account": 'Total (Credit)', balance_label: total })
+
+	chart = get_chart_data(filters, columns, asset, liability, equity, balance_label)
 	report_summary = get_report_summary(data, balance_label)
-
-	asset_accounts = get_account_list(filters, 'Asset', balance_label)
-	liability_accounts = get_account_list(filters, 'Liability', balance_label)
-	equity_accounts = get_account_list(filters, 'Equity', balance_label)
-
-	chart = get_chart_data(filters, columns, asset_accounts, liability_accounts, equity_accounts)
 
 	return columns, data, None, chart, report_summary
 
@@ -41,82 +49,78 @@ def get_columns(filters):
 	]
 	return columns
 
-def get_data(filters, balance_label):
+def get_data(company, root_type, dr_cr,balance_label):
+	accounts = get_accounts(company, root_type)
 	data = []
-
-	asset_accounts = get_account_list(filters, 'Asset', balance_label)
-	liability_accounts = get_account_list(filters, 'Liability', balance_label)
-	equity_accounts = get_account_list(filters, 'Equity', balance_label)
-
-	if asset_accounts:
-		append_accounts_and_total(data, asset_accounts, 'Total Asset (Debit)',balance_label)
-	if liability_accounts:
-		append_accounts_and_total(data, liability_accounts, 'Total Liability (Credit)', balance_label)
-	if equity_accounts:
-		append_accounts_and_total(data, equity_accounts, 'Total Equity (Credit)', balance_label)
-
-	profit_loss, total, a, b, c = get_profit_loss_total_amount(data, balance_label)
-	data.append({ "account": 'Provisional Profit/Loss (Credit)', balance_label: profit_loss })
-	data.append({ "account": 'Total (Credit)', balance_label: total })
-
+	if accounts:
+		i = 0
+		for d in accounts:
+			if d.parent_account == None or d.parent_account == data[-1]['account']:
+				append(data, d, i, balance_label)
+				i+=1
+			else:
+				for a in data:
+					if a['account'] == d.parent_account:
+						i = a['indent'] + 1
+						break
+				append(data, d, i, balance_label)
+				i+=1
+	temp=[]
+	for d in data:
+		bal = get_account_balance(d['account'])
+		if bal:
+			d[balance_label] = abs(bal)
+			temp.append(d)
+	for t in temp:
+		for d in data:
+			if d["account"] == t["parent_account"]:
+				if d[balance_label] == 0:
+					d[balance_label] = t[balance_label]
+					temp.append(d)
+				else:
+					d[balance_label] += t[balance_label]
+	data = [d for d in data if d[balance_label] != 0]
+	if data:
+		data.append({
+			"account": "Total " + root_type + " (" + dr_cr + ")",
+			balance_label: data[0][balance_label]
+		})
+		data.append({})
 	return data
 
-def get_account_list(filters, root_type, balance_label):
-	accounts = []
-	gl_entries = frappe.db.sql(
-		"""
-		select distinct(account)
-		from `tabGL Entry` 
-		where {conditions} and account in (select name from tabAccount where root_type=%s)
-		order by account
-		""".format(conditions=get_conditions(filters)), root_type, as_dict=1)
+def append(data, d, i, balance_label):
+	data.append({
+		"account": d.name,
+		"account_type": d.account_type,
+		"parent_account": d.parent_account,
+		"indent": i,
+		"has_value": d.is_group,
+		balance_label: 0
+	})
 
-	for gl_entry in gl_entries:
-		balance = abs(get_account_balance(gl_entry.account))
-		if balance:
-			accounts.append({
-				"account": gl_entry.account,
-				"root_type": root_type,
-				balance_label: balance
-			})
-	return accounts
-
-def append_accounts_and_total(data, accounts, label, balance_label):
-	data += accounts
-	balance = 0
-	for account in accounts:
-		balance += account[balance_label]
-	data.append({ "account": label, balance_label: balance })
-	data.append({ "account": '' })
+def get_accounts(company, root_type):
+	return frappe.db.sql(""" select name, parent_account, lft, root_type, account_type, is_group
+			from 
+				tabAccount
+			where 
+				company=%s and root_type=%s 
+			order by 
+				lft""", (company, root_type), as_dict=1)
 
 def get_profit_loss_total_amount(data, balance_label):
 	debit, credit, l_credit, e_credit = 0,0,0,0
 	for d in data:
-		if d['account'] == 'Total Asset (Debit)':
+		if d and d['account'] == 'Total Asset (Debit)':
 			debit = d[balance_label]
-		elif d['account'] == 'Total Liability (Credit)':
+		elif d and d['account'] == 'Total Liability (Credit)':
 			l_credit = d[balance_label]
 			credit = d[balance_label]
-		elif d['account'] == 'Total Equity (Credit)':
+		elif d and d['account'] == 'Total Equity (Credit)':
 			e_credit = d[balance_label]
 			credit += d[balance_label]
 	profit_loss = debit - credit
 	total = profit_loss + credit
 	return profit_loss, total, debit, l_credit, e_credit
-
-def get_conditions(filters):
-	conditions = []
-
-	if filters.get("company"):
-		conditions.append("company='{}'".format(filters.company))
-
-	year = frappe.db.sql("""select * from `tabFiscal Year` where year=%s""",filters.fiscal_year,as_dict=1)[0]
-
-	conditions.append("posting_date>='{}'".format(year.year_start_date))
-	conditions.append("posting_date<='{}'".format(year.year_end_date))
-	conditions.append("is_cancelled=0")
-
-	return "{}".format(" and ".join(conditions)) if conditions else ""
 
 def get_report_summary(data, balance_label):
 	profit, total, asset, liability, equity = get_profit_loss_total_amount(data, balance_label)
@@ -153,19 +157,17 @@ def get_report_summary(data, balance_label):
 	]
 	return report_summary
 
-def get_chart_data(filters, columns, asset, liability, equity):
-	labels = [d.get("label") for d in columns[1:]]
+def get_chart_data(filters, columns, asset, liability, equity, balance_label):
+	labels = [balance_label]
 
 	asset_data, liability_data, equity_data = [], [], []
 
-	for p in columns[1:]:
-		if asset:
-			asset_data.append(asset[0].get(p.get("fieldname")))
-		if liability:
-			liability_data.append(liability[0].get(p.get("fieldname")))
-		if equity:
-			equity_data.append(equity[0].get(p.get("fieldname")))
-	
+	if asset != 0:
+		asset_data.append(asset)
+	if liability != 0:
+		liability_data.append(liability)
+	if equity != 0:
+		equity_data.append(equity)
 
 	datasets = []
 	if asset_data:

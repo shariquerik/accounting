@@ -33,14 +33,3 @@ frappe.ui.form.on('Payment Entry', {
 		})
 	}
 });
-
-frappe.ui.form.on('Payment Entry', {
-    onload(frm) {
-        if(frm.parent.previousSibling.frm.doctype == 'Purchase Invoice'){
-            frm.set_value('payment_type', 'Pay');
-        }
-        else if(frm.parent.previousSibling.frm.doctype == 'Sales Invoice'){
-            frm.set_value('payment_type', 'Receive');
-        }
-    }
-});

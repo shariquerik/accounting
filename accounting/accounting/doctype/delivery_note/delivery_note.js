@@ -69,7 +69,6 @@ frappe.ui.form.on("Delivery Note Item", {
 		calculate_total(frm, cdt, cdn);
 	},
 	item: function(frm,cdt,cdn){
-		debugger;
 		var child = locals[cdt][cdn];
 		if(child.item){
 			frappe.db.get_doc('Item', child.item)
