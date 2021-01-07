@@ -4,10 +4,39 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe.utils import flt
 from frappe.model.document import Document
 from accounting.accounting.general_ledger import make_gl_entry, make_reverse_gl_entry
 
 class PurchaseInvoice(Document):
+
+	def validate(self):
+		self.validate_quantity()
+		self.set_item_rate_amount()
+		self.set_totals()
+		self.set_accounts()
+	
+	def validate_quantity(self):
+		for item in self.items:
+			if item.qty <= 0:
+				frappe.throw("One or more quantity is required for each product")
+
+	def set_item_rate_amount(self):
+		for item in self.items:
+			item.rate = frappe.db.get_value('Item', item.item, 'standard_selling_rate')
+			item.amount = flt(item.qty) * item.rate
+
+	def set_totals(self):
+		self.total_quantity, self.total_amount = 0,0
+		for item in self.items:
+			self.total_quantity = flt(self.total_quantity) + flt(item.qty)
+			self.total_amount = flt(self.total_amount) + flt(item.amount) 
+
+	def set_accounts(self):
+		if not self.expense_account:
+			self.expense_account = frappe.db.get_value('Company', self.company, 'stock_received_but_not_billed')
+		if not self.credit_to:
+			self.credit_to = frappe.db.get_value('Company', self.company, 'default_payable_account')
 
 	def on_submit(self):
 		make_gl_entry(self, self.expense_account, self.total_amount, 0)

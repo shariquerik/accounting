@@ -3,7 +3,6 @@
 
 from __future__ import unicode_literals
 import frappe
-from accounting.accounting.general_ledger import get_account_balance
 
 def execute(filters=None):
 	columns, data = [], []
@@ -12,9 +11,9 @@ def execute(filters=None):
 
 	columns = get_columns(filters)
 
-	asset = get_data(filters.company, 'Asset', 'Debit',balance_label)
-	liability = get_data(filters.company, 'Liability', 'Credit',balance_label)
-	equity = get_data(filters.company, 'Equity', 'Credit',balance_label)
+	asset = get_data(filters.company, filters.fiscal_year, 'Asset', 'Debit',balance_label)
+	liability = get_data(filters.company, filters.fiscal_year,'Liability', 'Credit',balance_label)
+	equity = get_data(filters.company, filters.fiscal_year,'Equity', 'Credit',balance_label)
 
 	data = []
 	data.extend(asset or [])
@@ -49,7 +48,7 @@ def get_columns(filters):
 	]
 	return columns
 
-def get_data(company, root_type, dr_cr,balance_label):
+def get_data(company, fiscal_year, root_type, dr_cr, balance_label):
 	accounts = get_accounts(company, root_type)
 	data = []
 	if accounts:
@@ -67,7 +66,7 @@ def get_data(company, root_type, dr_cr,balance_label):
 				i+=1
 	temp=[]
 	for d in data:
-		bal = get_account_balance(d['account'])
+		bal = get_account_balance(d['account'], fiscal_year)
 		if bal:
 			d[balance_label] = abs(bal)
 			temp.append(d)
@@ -106,6 +105,16 @@ def get_accounts(company, root_type):
 				company=%s and root_type=%s 
 			order by 
 				lft""", (company, root_type), as_dict=1)
+
+def get_account_balance(account, fiscal_year):
+	year = frappe.db.sql("""select year, year_start_date, year_end_date from `tabFiscal Year` where year=%s""",fiscal_year, as_dict=1)[0]
+	return frappe.db.sql("""SELECT 
+					sum(debit_amount) - sum(credit_amount) 
+				FROM 
+					`tabGL Entry` 
+				WHERE 
+					is_cancelled=0 and account=%s and posting_date>=%s and posting_date<=%s""",
+				(account, year.year_start_date, year.year_end_date))[0][0]
 
 def get_profit_loss_total_amount(data, balance_label):
 	debit, credit, l_credit, e_credit = 0,0,0,0

@@ -4,10 +4,32 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe.utils import flt, nowdate
 from frappe.model.document import Document
 
 class PurchaseOrder(Document):
-	pass
+	
+	def validate(self):
+		self.validate_quantity()
+		self.set_item_rate_amount_date()
+		self.set_totals()
+	
+	def validate_quantity(self):
+		for item in self.items:
+			if item.qty <= 0:
+				frappe.throw("One or more quantity is required for each product")
+
+	def set_item_rate_amount_date(self):
+		for item in self.items:
+			item.schedule_date = nowdate()
+			item.rate = frappe.db.get_value('Item', item.item, 'standard_selling_rate')
+			item.amount = flt(item.qty) * item.rate
+
+	def set_totals(self):
+		self.total_quantity, self.total_amount = 0,0
+		for item in self.items:
+			self.total_quantity = flt(self.total_quantity) + flt(item.qty)
+			self.total_amount = flt(self.total_amount) + flt(item.amount) 
 
 @frappe.whitelist()
 def make_purchase_receipt(source_name, target_doc=None):
