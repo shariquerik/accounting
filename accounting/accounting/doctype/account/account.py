@@ -42,3 +42,10 @@ def add_node():
 		args.parent_account = None
 
 	frappe.get_doc(args).insert()
+
+@frappe.whitelist()
+def get_company():
+	company = []
+	for d in frappe.db.sql("""select name from tabCompany"""):
+		company.append(d[0])
+	return company

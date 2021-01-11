@@ -8,8 +8,10 @@ frappe.treeview_settings["Account"] = {
 		{
 			fieldname: "company",
 			label: __("Company"),
-			fieldtype:"Link",
-			options: "Company",
+			fieldtype:"Select",
+			options: ["Haris Batteries", "Mohan Mobiles"],
+			// options: accounting.get_company.company(),
+			reqd: 1,
 			default: frappe.defaults.get_user_default("Company"),
 		}
 	],
@@ -28,5 +30,5 @@ frappe.treeview_settings["Account"] = {
 			description: __("Optional. This setting will be used to filter in various transactions.")
 		}
 	],
-	ignore_fields:["parent_account"],
+	ignore_fields:["parent_account"]
 }

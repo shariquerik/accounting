@@ -30,7 +30,7 @@
    "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "MAT-DN-.YYYY.-\nMAT-DN-RET-.YYYY.-",
+   "options": "ACC-DN-.YYYY.-\nACC-DN-RET-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -142,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-05 19:21:04.176567",
+ "modified": "2021-01-08 14:17:57.129507",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Delivery Note",

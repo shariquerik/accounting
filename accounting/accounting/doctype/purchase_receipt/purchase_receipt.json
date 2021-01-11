@@ -30,7 +30,7 @@
    "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "MAT-PRE-.YYYY.-\nMAT-PR-RET-.YYYY.-",
+   "options": "ACC-PRE-.YYYY.-\nACC-PR-RET-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -142,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-05 19:17:40.373531",
+ "modified": "2021-01-08 14:15:57.973755",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Purchase Receipt",

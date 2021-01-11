@@ -26,7 +26,7 @@
    "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "PUR-ORD-.YYYY.-",
+   "options": "ACC-PORD-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -116,7 +116,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-01-05 19:17:27.413054",
+ "modified": "2021-01-08 14:15:03.487774",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Purchase Order",
