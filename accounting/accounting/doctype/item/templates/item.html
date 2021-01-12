@@ -1,26 +1,38 @@
 {% extends "templates/web.html" %}
 
+{% block title %} {{ title }} {% endblock %}
+
 {% block page_content %}
-<div class="py-20 row">
-    <div class="col-sm-2">
-        <img src="{{ image }}" alt="{{ title }}">
-    </div>
-    <div class="col">
-        <h1>{{ title }}</h1>
-        <p class="lead">By Xiomi</p>
-        <div>
-            {%- if status == 'Available' -%}
-            <span class="badge badge-success">Available</span>
-            {%- elif status == 'Issued' -%}
-            <span class="badge badge-primary">Issued</span>
-            {%- endif -%}
-        </div>
-        <div class="mt-4">
-            <div>Price: <strong>₹ {{ standard_selling_rate }}</strong></div>
-        </div>
-        <p>{{ item_description }}</p>
-    </div>
+<div class="card mb-3">
+	<div class="row no-gutters">
+		<div class="col-md-6">
+			<div class="card-body">
+				<img class="website-image" src="{{ image }}" alt="{{ item_name }}">
+			</div>
+		</div>
+		<div class="col-md-6 py-6">
+			<div class="card-body">
+				<h2 class="card-title">
+					{{ item_name or name }}
+				</h2>
+				<p class="card-text">
+					{{ item_description or '<i class="text-muted">No description</i>' }}
+				</p>
+				<h3>PRICE: ₹ {{ standard_selling_rate }}</h3>
+				<button data-item-name='{{ name }}' class="add-to-cart btn btn-danger mt-3">Add to Cart</button>
+			</div>
+		</div>
+	</div>
 </div>
+{% endblock %}
+
+{% block base_scripts %}
+<script type="text/javascript" src="/assets/frappe/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/frappe-web.min.js"></script>
+<script type="text/javascript" src="/assets/js/control.min.js"></script>
+<script type="text/javascript" src="/assets/js/dialog.min.js"></script>
+<script type="text/javascript" src="/assets/js/bootstrap-4-web.min.js"></script>
+<script> {% include "accounting/accounting/doctype/item/templates/item.js" %} </script>
 {% endblock %}
 
 <!-- this is a sample default web page template -->

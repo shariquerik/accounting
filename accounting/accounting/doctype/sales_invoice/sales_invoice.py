@@ -4,7 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe.utils import flt
+from frappe.utils import flt, nowdate
 from frappe.model.document import Document
 from accounting.accounting.general_ledger import make_gl_entry, make_reverse_gl_entry
 
@@ -64,3 +64,63 @@ def make_payment_entry(source_name, target_doc=None):
 	}, target_doc)
 
 	return doclist
+
+@frappe.whitelist(allow_guest=True)
+def add_to_cart(item_name, user, save=True, submit=False):
+	# user = set_user(user)
+	si_name = get_si(user)
+	if si_name:
+		return update_sales_invoice(item_name, 1, si_name, save, submit)
+	else:
+		return make_sales_invoice(item_name, 1, user, save, submit)
+
+@frappe.whitelist(allow_guest=True)
+def make_sales_invoice(item_name, qty, party, save=True, submit=False):
+	si = frappe.new_doc("Sales Invoice")
+	si.party = party
+	si.posting_date = nowdate()
+	si.company = '_Test Company'
+	si.set("items",[
+		{
+			"item": item_name,
+			"qty": qty
+		}
+	])
+
+	if save or submit:
+		si.insert()
+		if submit:
+			si.submit()
+	
+	return si
+
+@frappe.whitelist(allow_guest=True)
+def update_sales_invoice(item_name, qty, si_name, save=True, submit=False):
+	si = frappe.get_doc("Sales Invoice", si_name)
+	items = si.items
+	item_added = False
+	if item_name:
+		for item in items:
+			if item.item == item_name:
+				item.update({
+					'qty': flt(item.qty) + flt(qty)
+				})
+				item_added = True
+				break
+		if not item_added:
+			si.append('items', {
+				'item': item_name,
+				'qty': flt(qty)
+			})
+	if save or submit:
+		si.save()
+		if submit:
+			si.submit()
+	return si
+
+def get_si(user):
+	doc = frappe.db.sql(""" select name from `tabSales Invoice` where party=%s and docstatus=0 order by modified desc""", 'Rohan', as_dict=1)
+	if not doc:
+		return None
+	else:
+		return doc[0].name

@@ -1,3 +1,4 @@
+
 frappe.treeview_settings["Account"] = {
 	get_tree_nodes: 'accounting.accounting.doctype.account.account.get_children',
 	add_tree_node: 'accounting.accounting.doctype.account.account.add_node',
@@ -8,11 +9,10 @@ frappe.treeview_settings["Account"] = {
 		{
 			fieldname: "company",
 			label: __("Company"),
-			fieldtype:"Select",
-			options: ["Haris Batteries", "Mohan Mobiles"],
-			// options: accounting.get_company.company(),
+			fieldtype:"Link",
+			options: "Company",
 			reqd: 1,
-			default: frappe.defaults.get_user_default("Company"),
+			default: frappe.defaults.get_user_default("Company")
 		}
 	],
 	fields: [
