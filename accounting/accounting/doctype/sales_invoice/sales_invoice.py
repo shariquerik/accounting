@@ -46,33 +46,34 @@ class SalesInvoice(Document):
 		self.ignore_linked_doctypes = ('GL Entry')
 		make_reverse_gl_entry(voucher_type=self.doctype, voucher_no=self.name)
 
-@frappe.whitelist()
-def make_payment_entry(source_name, target_doc=None):
-	from frappe.model.mapper import get_mapped_doc
-
-	doclist = get_mapped_doc("Sales Invoice", source_name , {
-		"Sales Invoice": {
-			"doctype": "Payment Entry",
-			"field_map": {
-				"total_amount": "paid_amount",
-				"debit_to": "paid_from"
-			},
-			"validation": {
-				"docstatus": ["=", 1]
-			}
-		}
-	}, target_doc)
-
-	return doclist
-
 @frappe.whitelist(allow_guest=True)
-def add_to_cart(item_name, user, save=True, submit=False):
-	# user = set_user(user)
+def add_to_cart(item_name, qty, user, save=True, submit=False):
+	user = user_exist(user)
 	si_name = get_si(user)
 	if si_name:
-		return update_sales_invoice(item_name, 1, si_name, save, submit)
+		return update_sales_invoice(item_name, qty, si_name, save, submit)
 	else:
-		return make_sales_invoice(item_name, 1, user, save, submit)
+		return make_sales_invoice(item_name, qty, user, save, submit)
+
+def user_exist(user):
+	user_email = frappe.db.get_value('User', user, 'email')
+	party = frappe.db.exists({ 'doctype': 'Party', 'party_email': user_email })
+	if not party:
+		party = frappe.new_doc('Party')
+		party.party_name = user
+		party.party_email = user_email
+		party.party_type = 'Customer'
+		party.insert()
+		return party.name
+	else:
+		return party[0][0]
+
+def get_si(user):
+	doc = frappe.db.sql(""" select name from `tabSales Invoice` where party=%s and docstatus=0 order by modified desc""", user, as_dict=1)
+	if not doc:
+		return None
+	else:
+		return doc[0].name
 
 @frappe.whitelist(allow_guest=True)
 def make_sales_invoice(item_name, qty, party, save=True, submit=False):
@@ -83,7 +84,7 @@ def make_sales_invoice(item_name, qty, party, save=True, submit=False):
 	si.set("items",[
 		{
 			"item": item_name,
-			"qty": qty
+			"qty": flt(qty)
 		}
 	])
 
@@ -91,7 +92,6 @@ def make_sales_invoice(item_name, qty, party, save=True, submit=False):
 		si.insert()
 		if submit:
 			si.submit()
-	
 	return si
 
 @frappe.whitelist(allow_guest=True)
@@ -118,9 +118,3 @@ def update_sales_invoice(item_name, qty, si_name, save=True, submit=False):
 			si.submit()
 	return si
 
-def get_si(user):
-	doc = frappe.db.sql(""" select name from `tabSales Invoice` where party=%s and docstatus=0 order by modified desc""", 'Rohan', as_dict=1)
-	if not doc:
-		return None
-	else:
-		return doc[0].name

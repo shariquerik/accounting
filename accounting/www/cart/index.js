@@ -1,9 +1,10 @@
 frappe.ready(function(){
 	$('.buy_now').on('click', (e) => {
 		frappe.msgprint({
-			title: __('Notification'),
+			title: __('Confirm'),
 			message: __('Are you sure you want to proceed?'),
 			primary_action:{
+				'label': 'Proceed',
 				action(){
 					var si = $(e.currentTarget).data('buy-item')
 					frappe.call({
@@ -16,11 +17,11 @@ frappe.ready(function(){
 						},
 						callback: (r) => {
 							$(e.currentTarget).prop('disabled', false);
-							location.reload();
+							window.location.href = "/cart"
 							frappe.msgprint({
 								title: 'Success',
 								indicator: 'green',
-								message: 'Thank You for shopping :)'
+								message: `<h6>Invoice: ${ si }</h6><p>Thank You for shopping :)</p>`
 							});
 						}
 					})

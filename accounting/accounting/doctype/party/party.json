@@ -3,7 +3,7 @@
  "allow_events_in_timeline": 1,
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "field:party_name",
  "creation": "2020-12-29 15:27:53.782555",
  "doctype": "DocType",
  "document_type": "Setup",
@@ -11,9 +11,7 @@
  "engine": "InnoDB",
  "field_order": [
   "basic_info",
-  "naming_series",
   "party_name",
-  "column_break_0",
   "party_type",
   "contact_details_section",
   "party_email",
@@ -43,6 +41,7 @@
    "fieldname": "party_email",
    "fieldtype": "Data",
    "label": "Email",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -63,21 +62,9 @@
    "options": "fa fa-user"
   },
   {
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Series",
-   "no_copy": 1,
-   "options": "SUP-.YYYY.-\nCUST-.YYYY.-",
-   "set_only_once": 1
-  },
-  {
    "fieldname": "contact_details_section",
    "fieldtype": "Section Break",
    "label": "Contact Details"
-  },
-  {
-   "fieldname": "column_break_0",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "column_break_1",
@@ -88,7 +75,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-01-05 13:58:34.448247",
+ "modified": "2021-01-13 14:52:03.286886",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Party",
@@ -111,7 +98,7 @@
  "search_fields": "party_name, party_type",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
- "sort_order": "ASC",
+ "sort_order": "DESC",
  "title_field": "party_name",
  "track_changes": 1
 }

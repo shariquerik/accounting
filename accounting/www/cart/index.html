@@ -1,3 +1,17 @@
+<style>
+	input[type=number]::-webkit-inner-spin-button, 
+	input[type=number]::-webkit-outer-spin-button { 
+		-webkit-appearance: none;
+	}
+	.qty{
+		max-width: 2rem;
+		border-width: 0 0;
+		font-size: 1rem;
+		height: 1.5rem;
+		outline: none;
+		text-align: center;
+	}
+</style>
 <h2>Cart</h2>
 {% if cart %}
 	{% for d in cart.get('items', []) %}
@@ -6,12 +20,14 @@
 			<div class="row no-gutters">
 				<div class="col-6 col-md-2">
 					<div class="card-body">
-						<img class="website-image" src="{{ image }}" alt="{{ d.item }}">
+						<a href="/{{ frappe.db.get_value('Item', d.item, 'route') }}"><img class="website-image" src="{{ image }}" alt="{{ d.item }}"></a>
 					</div>
 				</div>
 				<div class="col-6 col-md-4 py-6">
 					<div class="card-body">
-						<h4 class="card-title"><span class="text-muted" >Name: </span> {{ d.item }}</h4>
+						<h4 class="card-title"><span class="text-muted" >Name: </span>
+							<a class="text-dark" href="/{{ frappe.db.get_value('Item', d.item, 'route') }}">{{ d.item }}</a>
+						</h4>
 						<h5 class="card-title"><span class="text-muted" >Price: </span>₹ {{ frappe.db.get_value('Item', d.item, 'standard_selling_rate')  }}</h5>
 					</div>
 				</div>
@@ -19,6 +35,9 @@
 					<div class="card-body text-center">
 						<h5 class="card-title text-muted">Quantity</h5>
 						<h5>{{ d.qty }}</h5>
+						<!-- <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="minus btn btn-light btn-sm">-</button>
+						<input class="qty" min="1" value="{{ d.qty }}" type="number">
+						<button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus btn btn-light btn-sm">+</button> -->
 					</div>
 				</div>
 				<div class="col-6 col-md-3 py-6">
@@ -49,3 +68,4 @@
 		</div>
 	</div>
 {% endif %}
+
