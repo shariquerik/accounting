@@ -77,4 +77,9 @@ def make_purchase_invoice(item_name, qty, party, save=True, submit=False):
 	return pi
 
 def get_purchase_invoice(name):
-	return frappe.db.sql(""" select * from `tabPurchase Invoice` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+					*
+				FROM 
+					`tabPurchase Invoice` 
+				WHERE
+					name=%s """, name, as_dict=1)

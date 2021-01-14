@@ -77,4 +77,9 @@ def make_purchase_receipt(item_name, qty, party, save=True, submit=False):
 	return pr
 
 def get_purchase_receipt(name):
-	return frappe.db.sql(""" select * from `tabPurchase Receipt` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+						*
+					FROM
+						`tabPurchase Receipt`
+					WHERE
+						name=%s """, name, as_dict=1)

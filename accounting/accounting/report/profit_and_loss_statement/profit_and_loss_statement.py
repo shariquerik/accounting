@@ -7,26 +7,37 @@ import frappe
 def execute(filters=None):
 	columns, data = [], []
 
-	balance_label = "{}".format(filters.fiscal_year.replace(" ", "_").replace("-", "_"))
+	if filters.filter_based_on == 'Fiscal Year':
+		year = frappe.db.sql(""" SELECT
+						year_start_date, year_end_date
+					FROM
+						`tabFiscal Year`
+					WHERE
+						year=%s""",filters.fiscal_year, as_dict=1)[0]
+		date = [year.year_start_date, year.year_end_date]
+		period_key, period_label = "{}".format(filters.fiscal_year.replace(" ", "_").replace("-", "_")), filters.fiscal_year
+	elif filters.filter_based_on == 'Date Range':
+		period_key, period_label = "Date Range", "Date Range"
+		date = [filters.from_date, filters.to_date]
 
-	columns = get_columns(filters)
+	columns = get_columns(period_key, period_label)
 
-	income = get_data(filters.company, filters.fiscal_year, 'Income', 'Credit', balance_label)
-	expense = get_data(filters.company, filters.fiscal_year, 'Expense', 'Debit', balance_label)
+	income = get_data(date, filters.company, 'Income', 'Credit', period_key)
+	expense = get_data(date, filters.company, 'Expense', 'Debit', period_key)
 
 	data = []
 	data.extend(income or [])
 	data.extend(expense or [])
 
-	profit_loss, income, expense = get_profit_loss_amount(data, balance_label)
-	data.append({ "account": 'Profit for the year', balance_label: profit_loss })
+	profit_loss, income, expense = get_profit_loss_amount(data, period_key)
+	data.append({ "account": 'Profit for the year', period_key: profit_loss })
 
-	chart = get_chart_data(filters, columns, income, expense, data[-1][balance_label], balance_label)
-	report_summary = get_report_summary(data, balance_label)
+	chart = get_chart_data(filters, columns, income, expense, data[-1][period_key], period_key)
+	report_summary = get_report_summary(data, period_key)
 
 	return columns, data, None, chart, report_summary
 
-def get_columns(filters):
+def get_columns(period_key, period_label):
 	columns = [
 		{
 			"fieldname": "account",
@@ -36,8 +47,8 @@ def get_columns(filters):
 			"width": 300
 		},
 		{
-			"fieldname": filters.fiscal_year.replace(" ", "_").replace("-", "_"),
-			"label": filters.fiscal_year,
+			"fieldname": period_key,
+			"label": period_label,
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 150
@@ -45,86 +56,86 @@ def get_columns(filters):
 	]
 	return columns
 
-def get_data(company, fiscal_year, root_type, dr_cr, balance_label):
+def get_data(date, company, root_type, dr_cr, period_key):
 	accounts = get_accounts(company, root_type)
 	data = []
 	if accounts:
 		i = 0
 		for d in accounts:
 			if d.parent_account == None or d.parent_account == data[-1]['account']:
-				append(data, d, i, balance_label)
+				append(data, d, i, period_key)
 				i+=1
 			else:
 				for a in data:
 					if a['account'] == d.parent_account:
 						i = a['indent'] + 1
 						break
-				append(data, d, i, balance_label)
+				append(data, d, i, period_key)
 				i+=1
 	temp=[]
 	for d in data:
-		bal = get_account_balance(d['account'], fiscal_year)
+		bal = get_account_balance(d['account'], date)
 		if bal:
-			d[balance_label] = abs(bal)
+			d[period_key] = abs(bal)
 			temp.append(d)
 	for t in temp:
 		for d in data:
 			if d["account"] == t["parent_account"]:
-				if d[balance_label] == 0:
-					d[balance_label] = t[balance_label]
+				if d[period_key] == 0:
+					d[period_key] = t[period_key]
 					temp.append(d)
 				else:
-					d[balance_label] += t[balance_label]
-	data = [d for d in data if d[balance_label] != 0]
+					d[period_key] += t[period_key]
+	data = [d for d in data if d[period_key] != 0]
 	if data:
 		data.append({
 			"account": "Total " + root_type + " (" + dr_cr + ")",
-			balance_label: data[0][balance_label]
+			period_key: data[0][period_key]
 		})
 		data.append({})
 	return data
 
-def append(data, d, i, balance_label):
+def append(data, d, i, period_key):
 	data.append({
 		"account": d.name,
 		"account_type": d.account_type,
 		"parent_account": d.parent_account,
 		"indent": i,
 		"has_value": d.is_group,
-		balance_label: 0
+		period_key: 0
 	})
 
 def get_accounts(company, root_type):
-	return frappe.db.sql(""" select name, parent_account, lft, root_type, account_type, is_group
-			from 
+	return frappe.db.sql(""" SELECT 
+				name, parent_account, lft, root_type, account_type, is_group
+			FROM 
 				tabAccount
-			where 
+			WHERE 
 				company=%s and root_type=%s 
-			order by 
+			ORDER BY 
 				lft""", (company, root_type), as_dict=1)
 
-def get_account_balance(account, fiscal_year):
-	year = frappe.db.sql("""select year, year_start_date, year_end_date from `tabFiscal Year` where year=%s""",fiscal_year, as_dict=1)[0]
-	return frappe.db.sql("""SELECT 
+def get_account_balance(account, date):
+	return frappe.db.sql(""" SELECT 
 					sum(debit_amount) - sum(credit_amount) 
 				FROM 
 					`tabGL Entry` 
 				WHERE 
 					is_cancelled=0 and account=%s and posting_date>=%s and posting_date<=%s""",
-				(account, year.year_start_date, year.year_end_date))[0][0]
+				(account, date[0], date[1]))[0][0]
 
-def get_profit_loss_amount(data, balance_label):
+def get_profit_loss_amount(data, period_key):
 	income, expense = 0,0
 	for d in data:
 		if d and d['account'] == 'Total Income (Credit)':
-			income = d[balance_label]
+			income = d[period_key]
 		elif d and d['account'] == 'Total Expense (Debit)':
-			expense = d[balance_label]
+			expense = d[period_key]
 	profit_loss = income - expense
 	return profit_loss, income, expense
 
-def get_report_summary(data, balance_label):
-	profit, income, expense = get_profit_loss_amount(data, balance_label)
+def get_report_summary(data, period_key):
+	profit, income, expense = get_profit_loss_amount(data, period_key)
 
 	report_summary = [
 		{
@@ -149,8 +160,8 @@ def get_report_summary(data, balance_label):
 	]
 	return report_summary
 
-def get_chart_data(filters, columns, income, expense, profit, balance_label):
-	labels = [balance_label]
+def get_chart_data(filters, columns, income, expense, profit, period_key):
+	labels = [period_key]
 
 	income_data, expense_data, profit_data = [], [], []
 

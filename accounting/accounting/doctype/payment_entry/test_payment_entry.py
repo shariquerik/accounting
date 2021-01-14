@@ -74,5 +74,10 @@ def make_payment_entry(party, payment_type, paid_amount, save=True, submit=False
 	return pe
 
 def get_payment_entry(name):
-	return frappe.db.sql(""" select * from `tabPayment Entry` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+					*
+				FROM
+					`tabPayment Entry`
+				WHERE
+					name=%s """, name, as_dict=1)
 

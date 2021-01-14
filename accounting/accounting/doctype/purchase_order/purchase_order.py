@@ -22,29 +22,11 @@ class PurchaseOrder(Document):
 	def set_item_rate_amount_date(self):
 		for item in self.items:
 			item.schedule_date = nowdate()
-			item.rate = frappe.db.get_value('Item', item.item, 'standard_selling_rate')
+			item.rate = frappe.db.get_value('Item', item.item, 'standard_purchase_rate')
 			item.amount = flt(item.qty) * item.rate
 
 	def set_totals(self):
 		self.total_quantity, self.total_amount = 0,0
 		for item in self.items:
 			self.total_quantity = flt(self.total_quantity) + flt(item.qty)
-			self.total_amount = flt(self.total_amount) + flt(item.amount) 
-
-@frappe.whitelist()
-def make_purchase_receipt(source_name, target_doc=None):
-	from frappe.model.mapper import get_mapped_doc
-
-	doclist = get_mapped_doc("Purchase Order", source_name , {
-		"Purchase Order": {
-			"doctype": "Purchase Receipt",
-			"field_map": {
-				"party": "party"
-			},
-			"validation": {
-				"docstatus": ["=", 1]
-			}
-		}
-	}, target_doc)
-
-	return doclist
+			self.total_amount = flt(self.total_amount) + flt(item.amount)

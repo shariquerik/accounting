@@ -23,7 +23,7 @@ class PurchaseReceipt(Document):
 
 	def set_item_rate_amount(self):
 		for item in self.items:
-			item.rate = frappe.db.get_value('Item', item.item, 'standard_selling_rate')
+			item.rate = frappe.db.get_value('Item', item.item, 'standard_purchase_rate')
 			item.amount = flt(item.qty) * item.rate
 
 	def set_totals(self):

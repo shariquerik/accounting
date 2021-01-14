@@ -10,8 +10,12 @@ class Company(NestedSet):
 
 	def on_update(self):
 		NestedSet.on_update(self)
-		if not frappe.db.sql("""select name from tabAccount
-				where company=%s and docstatus<2 limit 1""", self.name):
+		if not frappe.db.sql("""SELECT
+							name
+						FROM
+							tabAccount
+						WHERE
+							company=%s and docstatus<2 limit 1""", self.name):
 			self.create_accounts()
 		self.set_default_accounts()
 

@@ -3,14 +3,6 @@
 
 frappe.ui.form.on('Purchase Invoice', {
 	refresh: function(frm) {
-		// frm.add_custom_button(__("Payment Entry"), function () {
-		// 	frappe.model.open_mapped_doc({
-		// 		method: "accounting.accounting.doctype.purchase_invoice.purchase_invoice.make_payment_entry",
-		// 		frm: cur_frm
-		// 	})
-		// }, __("Create"));
-		// frm.page.set_inner_btn_group_as_primary(__('Create'));
-
 		cur_frm.add_custom_button(__("Payment Entry"), function() {
 			frappe.model.with_doctype('Payment Entry', function() {
 				var pe = frappe.model.get_new_doc('Payment Entry');
@@ -46,7 +38,7 @@ frappe.ui.form.on("Purchase Invoice Item", {
 			frappe.db.get_doc('Item', child.item)
 			.then( doc =>{
 				frappe.model.set_value(cdt, cdn, 'qty', 1.00)
-				frappe.model.set_value(cdt, cdn, 'rate', doc.standard_selling_rate)
+				frappe.model.set_value(cdt, cdn, 'rate', doc.standard_purchase_rate)
 			})
 		}
 	}
@@ -55,7 +47,6 @@ var calculate_total = function(frm, cdt, cdn) {
 	var child = locals[cdt][cdn];
 	frappe.model.set_value(cdt, cdn, "amount", child.qty * child.rate);
 }
-
 
 frappe.ui.form.on("Purchase Invoice Item", "qty", function(frm, cdt, cdn) {
 	var purchase_item_details = frm.doc.items;

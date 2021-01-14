@@ -3,14 +3,6 @@
 
 frappe.ui.form.on('Sales Invoice', {
 	refresh: function(frm) {
-		// frm.add_custom_button(__("Payment Entry"), function () {
-		// 	frappe.model.open_mapped_doc({
-		// 		method: "accounting.accounting.doctype.sales_invoice.sales_invoice.make_payment_entry",
-		// 		frm: cur_frm
-		// 	})
-		// }, __("Create"));
-		// frm.page.set_inner_btn_group_as_primary(__('Create'));
-
 		cur_frm.add_custom_button(__("Payment Entry"), function() {
 			frappe.model.with_doctype('Payment Entry', function() {
 				var pe = frappe.model.get_new_doc('Payment Entry');

@@ -44,8 +44,12 @@ class PaymentEntry(Document):
 		gl_entry.submit()
 
 	def cancel_gl_entry(self, voucher_type, voucher_no):
-		frappe.db.sql("""UPDATE `tabGL Entry` SET is_cancelled=1 WHERE voucher_type=%s and voucher_no=%s and is_cancelled=0""",
-					  (voucher_type, voucher_no))
+		frappe.db.sql("""UPDATE
+				`tabGL Entry`
+			SET 
+				is_cancelled=1
+			WHERE
+				voucher_type=%s and voucher_no=%s and is_cancelled=0""", (voucher_type, voucher_no))
 
 	def balance_update(self, account, type):
 		account = frappe.get_doc('Account', account)

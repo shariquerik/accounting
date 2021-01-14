@@ -87,7 +87,17 @@ def make_journal_entry(posting_date, account1, account2, amount, save=True, subm
 	return jv
 
 def get_journal_entry(jv_name):
-	return frappe.db.sql(""" select * from `tabJournal Entry` where name=%s """, jv_name, as_dict=1)
+	return frappe.db.sql(""" SELECT 
+						* 
+					FROM
+						`tabJournal Entry`
+					WHERE
+						name=%s """, jv_name, as_dict=1)
 
 def get_gl_entries(voucher_no, voucher_type):
-	return frappe.db.sql(""" select * from `tabGL Entry` where voucher_no=%s and voucher_type=%s """, (voucher_no, voucher_type), as_dict=1)
+	return frappe.db.sql(""" SELECT 
+						* 
+					FROM 
+						`tabGL Entry` 
+					WHERE 
+						voucher_no=%s and voucher_type=%s """, (voucher_no, voucher_type), as_dict=1)

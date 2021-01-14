@@ -23,7 +23,7 @@ class PurchaseInvoice(Document):
 
 	def set_item_rate_amount(self):
 		for item in self.items:
-			item.rate = frappe.db.get_value('Item', item.item, 'standard_selling_rate')
+			item.rate = frappe.db.get_value('Item', item.item, 'standard_purchase_rate')
 			item.amount = flt(item.qty) * item.rate
 
 	def set_totals(self):
@@ -45,22 +45,3 @@ class PurchaseInvoice(Document):
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ('GL Entry')
 		make_reverse_gl_entry(voucher_type=self.doctype, voucher_no=self.name)
-
-@frappe.whitelist()
-def make_payment_entry(source_name, target_doc=None):
-	from frappe.model.mapper import get_mapped_doc
-
-	doclist = get_mapped_doc("Purchase Invoice", source_name , {
-		"Purchase Invoice": {
-			"doctype": "Payment Entry",
-			"field_map": {
-				"total_amount": "paid_amount",
-				"credit_to": "paid_to"
-			},
-			"validation": {
-				"docstatus": ["=", 1]
-			}
-		}
-	}, target_doc)
-
-	return doclist

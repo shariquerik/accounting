@@ -11,9 +11,10 @@
  "field_order": [
   "item_code",
   "item_name",
-  "standard_selling_rate",
+  "standard_purchase_rate",
   "column_break_3",
   "item_group",
+  "standard_selling_rate",
   "description_section",
   "brand",
   "item_description",
@@ -82,6 +83,12 @@
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "Route"
+  },
+  {
+   "fieldname": "standard_purchase_rate",
+   "fieldtype": "Currency",
+   "label": "Standard Purchase Rate",
+   "precision": "2"
   }
  ],
  "has_web_view": 1,
@@ -90,7 +97,7 @@
  "index_web_pages_for_search": 1,
  "links": [],
  "max_attachments": 1,
- "modified": "2021-01-13 15:32:17.961451",
+ "modified": "2021-01-14 17:13:57.865277",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Item",

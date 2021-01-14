@@ -17,7 +17,7 @@ frappe.ready(function(){
 						},
 						callback: (r) => {
 							$(e.currentTarget).prop('disabled', false);
-							window.location.href = "/cart"
+							window.location.reload()
 							frappe.msgprint({
 								title: 'Success',
 								indicator: 'green',

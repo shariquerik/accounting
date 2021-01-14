@@ -77,5 +77,10 @@ def make_delivery_note(item_name, qty, party, save=True, submit=False):
 	return dn
 
 def get_delivery_note(name):
-	return frappe.db.sql(""" select * from `tabDelivery Note` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+					* 
+				FROM 
+					`tabDelivery Note`
+				WHERE 
+					name=%s """, name, as_dict=1)
 

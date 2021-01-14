@@ -21,6 +21,8 @@
    "precision": "2"
   },
   {
+   "fetch_from": "item.standard_selling_rate",
+   "fetch_if_empty": 1,
    "fieldname": "rate",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -59,7 +61,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-01-05 19:27:21.082617",
+ "modified": "2021-01-14 18:43:30.392789",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "Sales Invoice Item",

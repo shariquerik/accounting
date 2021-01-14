@@ -69,7 +69,12 @@ def user_exist(user):
 		return party[0][0]
 
 def get_si(user):
-	doc = frappe.db.sql(""" select name from `tabSales Invoice` where party=%s and docstatus=0 order by modified desc""", user, as_dict=1)
+	doc = frappe.db.sql(""" SELECT
+					name
+				FROM
+					`tabSales Invoice`
+				WHERE
+					party=%s and docstatus=0 order by modified desc""", user, as_dict=1)
 	if not doc:
 		return None
 	else:
@@ -117,4 +122,3 @@ def update_sales_invoice(item_name, qty, si_name, save=True, submit=False):
 		if submit:
 			si.submit()
 	return si
-

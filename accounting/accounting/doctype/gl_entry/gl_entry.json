@@ -91,6 +91,7 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Company",
    "options": "Company"
   },
@@ -124,7 +125,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-01-05 18:16:20.860461",
+ "modified": "2021-01-14 17:30:24.206861",
  "modified_by": "Administrator",
  "module": "Accounting",
  "name": "GL Entry",

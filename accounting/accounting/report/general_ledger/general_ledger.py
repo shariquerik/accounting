@@ -88,11 +88,14 @@ def get_data(filters):
 
 def get_gl_entries(filters):
 
-	gl_entries = frappe.db.sql(
-		"""
-		select name as gl_entry, posting_date, account, party, voucher_type, voucher_no, debit_amount, credit_amount
-		from `tabGL Entry` where {conditions} order by voucher_no, account
-		""".format(conditions=get_conditions(filters)),filters , as_dict=1)
+	gl_entries = frappe.db.sql(""" SELECT
+						name as gl_entry, posting_date, account, party, voucher_type, voucher_no, debit_amount, credit_amount
+					FROM
+						`tabGL Entry`
+					WHERE
+						{conditions}
+					ORDER BY
+						voucher_no, account""".format(conditions=get_conditions(filters)),filters , as_dict=1)
 
 	return gl_entries
 

@@ -51,4 +51,9 @@ def make_purchase_order(item_name, qty, party, save=True, submit=False):
 	return po
 
 def get_purchase_order(name):
-	return frappe.db.sql(""" select * from `tabPurchase Order` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+					*
+				FROM
+					`tabPurchase Order`
+				WHERE 
+					name=%s """, name, as_dict=1)

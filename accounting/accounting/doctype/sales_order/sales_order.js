@@ -3,14 +3,6 @@
 
 frappe.ui.form.on('Sales Order', {
 	refresh: function(frm) {
-		// frm.add_custom_button(__("Delivery Note"), function () {
-		// 	frappe.model.open_mapped_doc({
-		// 		method: "accounting.accounting.doctype.sales_order.sales_order.make_delivery_note",
-		// 		frm: cur_frm
-		// 	})
-		// }, __("Create"));
-		// frm.page.set_inner_btn_group_as_primary(__('Create'));
-
 		cur_frm.add_custom_button(__("Delivery Note"), function() {
 			get_doc(cur_frm.docname).then(
 				function(result) { 
@@ -68,7 +60,7 @@ frappe.ui.form.on("Sales Order Item", {
 			.then( doc =>{
 				frappe.model.set_value(cdt, cdn, 'qty', 1.00)
 				frappe.model.set_value(cdt, cdn, 'delivery_date', frm.doc.delivery_date)
-				frappe.model.set_value(cdt, cdn, 'rate', doc.standard_selling_rate)
+				frappe.model.set_value(cdt, cdn, 'rate', doc.standard_purchase_rate)
 			})
 		}
 	}

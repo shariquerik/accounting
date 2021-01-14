@@ -51,4 +51,9 @@ def make_sales_order(item_name, qty, party, save=True, submit=False):
 	return so
 
 def get_sales_order(name):
-	return frappe.db.sql(""" select * from `tabSales Order` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+					*
+				FROM
+					`tabSales Order`
+				WHERE
+					name=%s """, name, as_dict=1)

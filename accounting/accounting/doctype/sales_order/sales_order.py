@@ -22,7 +22,7 @@ class SalesOrder(Document):
 	def set_item_rate_amount_date(self):
 		for item in self.items:
 			item.delivery_date = nowdate()
-			item.rate = frappe.db.get_value('Item', item.item, 'standard_selling_rate')
+			item.rate = frappe.db.get_value('Item', item.item, 'standard_purchase_rate')
 			item.amount = flt(item.qty) * item.rate
 
 	def set_totals(self):
@@ -30,21 +30,3 @@ class SalesOrder(Document):
 		for item in self.items:
 			self.total_quantity = flt(self.total_quantity) + flt(item.qty)
 			self.total_amount = flt(self.total_amount) + flt(item.amount) 
-
-@frappe.whitelist()
-def make_delivery_note(source_name, target_doc=None):
-	from frappe.model.mapper import get_mapped_doc
-
-	doclist = get_mapped_doc("Sales Order", source_name , {
-		"Sales Order": {
-			"doctype": "Delivery Note",
-			"field_map": {
-				"party": "party"
-			},
-			"validation": {
-				"docstatus": ["=", 1]
-			}
-		}
-	}, target_doc)
-
-	return doclist

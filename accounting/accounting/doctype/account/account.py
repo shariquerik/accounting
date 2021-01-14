@@ -46,6 +46,9 @@ def add_node():
 @frappe.whitelist()
 def get_company():
 	company = []
-	for d in frappe.db.sql("""select name from tabCompany"""):
+	for d in frappe.db.sql("""SELECT
+						name
+					FROM
+						tabCompany"""):
 		company.append(d[0])
 	return company

@@ -77,5 +77,10 @@ def make_sales_invoice(item_name, qty, party, save=True, submit=False):
 	return si
 
 def get_sales_invoice(name):
-	return frappe.db.sql(""" select * from `tabSales Invoice` where name=%s """, name, as_dict=1)
+	return frappe.db.sql(""" SELECT
+						*
+					FROM
+						`tabSales Invoice`
+					WHERE
+						name=%s """, name, as_dict=1)
 
